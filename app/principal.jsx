@@ -4,7 +4,7 @@ import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, I
 
 export default function Principal() {
     const [contador, setContador] = useState(3);
-
+ 
     return (
         <ImageBackground
             source={require('../assets/images/background.jpg')}
