@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Image } from 'react-native';
 
 
 export default function Principal() {
     const [contador, setContador] = useState(3);
+    const router = useRouter();
  
     return (
         <ImageBackground
@@ -23,7 +25,7 @@ export default function Principal() {
 
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => setContador(contador - 1)}
+                    onPress={() => router.push(`/modal`)}
                 >
                     <Text style={styles.buttonText}>Expresa aquí tus emociones</Text>
                 </TouchableOpacity>
