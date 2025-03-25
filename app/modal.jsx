@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, ImageBackground, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import useUserStore from '../store/userStore';
 
 const EmotionModal = () => {
     const [visible, setVisible] = useState(true);
     const [selectedEmotions, setSelectedEmotions] = useState([]);
     const router = useRouter();
+    const { addEmocion } = useUserStore();
 
     const emotionsData = [
         { 
@@ -49,10 +51,12 @@ const EmotionModal = () => {
     };
 
     const handleSend = () => {
-        router.push({
-            pathname: "/principal",
-            params: { selectedEmotions: JSON.stringify(selectedEmotions) } 
+        // Añadir cada emoción seleccionada al estado global
+        selectedEmotions.forEach(emocion => {
+            addEmocion(emocion);
         });
+        
+        router.back();
     };
 
     const getDescription = () => {
