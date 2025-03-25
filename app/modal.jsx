@@ -14,7 +14,7 @@ const EmotionModal = () => {
             description: 'El enojo es una emoción que surge cuando sentimos que algo no es justo o cuando nuestras expectativas no se cumplen.' 
         },
         { 
-            color: 'orange', 
+            color: 'rgb(253, 93, 0)', 
             label: 'Celos', 
             description: 'Los celos aparecen cuando sentimos que podemos perder algo o a alguien que valoramos, o cuando percibimos una amenaza a una relación importante.' 
         },
@@ -59,7 +59,7 @@ const EmotionModal = () => {
         if (selectedEmotions.length === 0) {
             return (
                 <View style={styles.currentDescription}>
-                    <Text style={styles.initialMessage}>Selecciona una emoción para ver su descripción</Text>
+                    <Text style={styles.initialMessage} >Selecciona una emoción para ver su descripción</Text>
                 </View>
             );
         }
@@ -139,10 +139,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(0,0,0,0.5)',
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
@@ -178,16 +177,21 @@ const styles = StyleSheet.create({
     },
     selectedCircleContainer: {
         borderWidth: 2,
-        borderColor: '#6200ea',
+        borderColor: 'rgb(255, 255, 255)',
         borderRadius: 30,
     },
     label: {
-        fontSize: 16,
+        fontSize: 18,
         textAlign: 'center',
+        color: 'rgb(255, 255, 255)',
+        fontWeight: 'bold',
+    },
+    initialMessage:{
+        color: 'rgb(255, 255, 255)', 
     },
     selectedText: {
         fontSize: 14,
-        color: '#6200ea',
+        color: 'rgba(255, 255, 255, 0.5)',
         fontWeight: 'bold',
     },
     descriptionScrollContainer: {
@@ -197,7 +201,7 @@ const styles = StyleSheet.create({
     },
     descriptionContainer: {
         padding: 10,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: 'rgba(255, 255, 255, 0.42)',
         borderRadius: 8,
     },
     emotionDescription: {
@@ -210,19 +214,19 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     descriptionTitle: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: 'rgb(255, 255, 255)',
         marginBottom: 3,
     },
     descriptionText: {
-        fontSize: 14,
-        color: '#555',
+        fontSize: 16,
+        color: 'rgb(255, 255, 255)',
         textAlign: 'left',
     },
     closeButton: {
         marginTop: 10,
-        backgroundColor: '#6200ea',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
         padding: 12,
         borderRadius: 5,
         width: '100%',
@@ -230,11 +234,11 @@ const styles = StyleSheet.create({
     },
     closeButtonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 19,
     },
     sendButton: {
         marginTop: 10,
-        backgroundColor: 'green',
+        backgroundColor: 'rgba(34, 36, 189, 0.5)',
         padding: 12,
         borderRadius: 5,
         width: '100%',
@@ -242,7 +246,7 @@ const styles = StyleSheet.create({
     },
     sendButtonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 19,
     },
 });
 
