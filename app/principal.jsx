@@ -3,12 +3,15 @@ import { useRouter } from 'expo-router';
 import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Image, Modal } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { Calendar } from 'react-native-calendars';
+import useUserStore from '../store/userStore';
 
 export default function Principal() {
     const [contador, setContador] = useState(3);
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
     const router = useRouter();
+    const {nombre} = useUserStore();
+
     const onDayPress = (day) => {
         setSelectedDate(day.dateString);
         setShowCalendar(false); // Cierra el modal después de seleccionar una fecha
@@ -25,7 +28,11 @@ export default function Principal() {
                 </TouchableOpacity>
             </View>
             <View style={styles.header}>
+                <View >
+                    <Text style={styles.subtitle}>Hola {nombre}!</Text>
                 <Text style={styles.subtitle}>¿Cómo te sientes el día de hoy?</Text>
+                </View>
+                
                 {selectedDate ? (
                     <Text style={styles.selectedDate}>{selectedDate}</Text>
                 ) : (
@@ -66,8 +73,6 @@ export default function Principal() {
                 </View>
             </Modal>
             <View style={styles.container}>
-
-
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => router.push(`/modal`)}
@@ -116,7 +121,6 @@ const styles = StyleSheet.create({
     subtitle: {
         color: 'white',
         fontSize: 20,
-        textAlign: 'center',
         marginBottom: 20,
         fontWeight: 'bold',
     },
