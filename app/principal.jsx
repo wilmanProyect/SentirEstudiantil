@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Image } from 'react-native';
-
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Principal() {
     const [contador, setContador] = useState(3);
@@ -14,7 +14,7 @@ export default function Principal() {
         >
             <View style={styles.header}>
                 <Text style={styles.title}>Cielo emocional</Text>
-                <Image source={require('../assets/images/favicon.png')}></Image>
+                <Ionicons name="calendar" style={styles.icono} />
             </View>
             <View style={styles.header}>
                 <Text style={styles.subtitle}>¿Cómo te sientes el día de hoy?</Text>
@@ -108,4 +108,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
     },
+    icono:{
+        fontSize: 30,
+        color: 'white',
+    }
 });
