@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Image, Modal } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Calendar } from 'react-native-calendars';
 import { useNombre } from '../store/userStore';
+import useUserStore from '../store/userStore';
 
+const { width, height } = Dimensions.get('window');
+
+// Mapeo de emociones a colores
+const emotionColors = {
+    'Enojo': 'red',
+    'Celos': 'rgb(253, 93, 0)',
+    'Alegría': 'yellow',
+    'Desagrado': 'green',
+    'Tristeza': 'skyblue',
+    'Nostalgia': 'purple'
+};
+
+
+// Definimos los límites de la zona de renderizado
+const TOP_MARGIN = 100;  // Margen superior (píxeles)
+const BOTTOM_MARGIN = 250; // Margen inferior (píxeles)
+const RENDER_HEIGHT = height - TOP_MARGIN - BOTTOM_MARGIN;
+const RENDER_WIDTH = width;
+const MAX_STARS = 100; // Límite de estrellas
 export default function Principal() {
     const [contador, setContador] = useState(3);
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
+    const [stars, setStars] = useState([]); // Cambiado a array
+    const { emociones } = useUserStore();
     const router = useRouter();
     const nombre = useNombre();
 
@@ -16,6 +38,27 @@ export default function Principal() {
         setSelectedDate(day.dateString);
         setShowCalendar(false); // Cierra el modal después de seleccionar una fecha
     };
+
+    // Generar posiciones dentro del área permitida
+    useEffect(() => {
+        if (emociones.length > 0) {
+            // Crear nuevas estrellas solo para emociones que no tienen una estrella aún
+            const newStars = emociones.slice(0, MAX_STARS).map((emocion, index) => {
+                return {
+                    id: `${index}-${Date.now()}`,
+                    emocion,
+                    color: emotionColors[emocion] || '#ffffff',
+                    top: TOP_MARGIN + (Math.random() * RENDER_HEIGHT),
+                    left: Math.random() * RENDER_WIDTH
+                };
+            });
+            
+            setStars(newStars);
+        } else {
+            setStars([]); // Limpiar si no hay emociones
+        }
+    }, [emociones]);
+
     return (
         <ImageBackground
             source={require('../assets/images/background.jpg')}
@@ -30,15 +73,31 @@ export default function Principal() {
             <View style={styles.header}>
                 <View >
                     <Text style={styles.subtitle}>Hola {nombre}!</Text>
-                <Text style={styles.subtitle}>¿Cómo te sientes el día de hoy?</Text>
+                    <Text style={styles.subtitle}>¿Cómo te sientes el día de hoy?</Text>
                 </View>
-                
+
                 {selectedDate ? (
                     <Text style={styles.selectedDate}>{selectedDate}</Text>
                 ) : (
                     <Text> __ </Text>
                 )}
             </View>
+            {/* Renderizar estrellas */}
+            {stars.map((star) => (
+                <FontAwesome
+                    key={star.id}
+                    name="star"
+                    size={30}
+                    color={star.color}
+                    style={[
+                        styles.star,
+                        {
+                            top: star.top,
+                            left: star.left
+                        }
+                    ]}
+                />
+            ))}
             <Modal
                 visible={showCalendar}
                 animationType="slide"
@@ -50,7 +109,7 @@ export default function Principal() {
                         <Calendar
                             onDayPress={onDayPress}
                             markedDates={{
-                                [selectedDate]: {selected: true, selectedColor: '#6200ee'}
+                                [selectedDate]: { selected: true, selectedColor: '#6200ee' }
                             }}
                             theme={{
                                 backgroundColor: '#ffffff',
@@ -183,5 +242,16 @@ const styles = StyleSheet.create({
     closeButtonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    star: {
+        position: 'absolute',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        elevation: 5,
     },
 });
