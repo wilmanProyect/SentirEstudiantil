@@ -1,10 +1,25 @@
-import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Alert} from 'react-native';
 import { useRouter } from "expo-router";
 import useUserStore from '../store/userStore';
+import { useState } from 'react';
 
 export default function Index() {
-  const { nombre, edad, setNombre, setEdad } = useUserStore();
+  const { nombre,  setNombre} = useUserStore();
+  const [errors, setErrors] = useState({ nombre: false});
   const router = useRouter();
+
+  const handleSubmit = () => {
+    // Validación de campos
+    const newErrors = {
+      nombre: !nombre.trim(),
+    };
+    
+    setErrors(newErrors);
+
+    if (!newErrors.nombre) {
+      router.push('/principal');
+    }
+  };
   return (
     <ImageBackground
       source={require('../assets/images/background.jpg')}
@@ -16,18 +31,16 @@ export default function Index() {
         <TextInput
           placeholder="Nombre"
           value={nombre}
-          onChangeText={setNombre}
+          onChangeText={(text) => {
+            setNombre(text);
+            setErrors({...errors, nombre: false});
+          }}
           style={styles.input}
         />
-        <TextInput
-          placeholder="Edad"
-          value={edad}
-          onChangeText={setEdad}
-          style={styles.input}
-        />
+        {errors.nombre && <Text style={styles.errorText}>Este campo es requerido</Text>}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push(`/principal`)}
+          onPress={handleSubmit}
         >
           <Text>Comenzar</Text>
         </TouchableOpacity>
@@ -71,5 +84,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 20,
     fontWeight: 'bold'
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 15,
+    marginTop: -5,
+    marginBottom: 5
   }
 });        
