@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { Text, View, TextInput, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import { Text, View, StyleSheet, ImageBackground, TouchableOpacity, Modal, Animated, Easing, } from 'react-native';
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Calendar } from 'react-native-calendars';
 import { useNombre } from '../store/userStore';
 import useUserStore from '../store/userStore';
 
-const { width, height } = Dimensions.get('window');
 
 // Mapeo de emociones a colores
 const emotionColors = {
@@ -17,9 +16,74 @@ const emotionColors = {
     'Tristeza': 'skyblue',
     'Nostalgia': 'purple'
 };
-const MAX_STARS = 100; // Límite de estrellas
+const Star = React.memo(({ emocion, top, left }) => {
+    const scaleAnim = useRef(new Animated.Value(0)).current;
+    const pulseAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 2000,
+            easing: Easing.elastic(1.5),
+            useNativeDriver: true,
+        }).start();
+
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(pulseAnim, {
+                    toValue: 1,
+                    duration: 2000,
+                    easing: Easing.inOut(Easing.quad),
+                    useNativeDriver: true,
+                }),
+                Animated.timing(pulseAnim, {
+                    toValue: 0,
+                    duration: 2000,
+                    easing: Easing.inOut(Easing.quad),
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
+
+    const pulseStyle = {
+        transform: [
+            { scale: scaleAnim },
+            {
+                scale: pulseAnim.interpolate({
+                    inputRange: [0, 0.6],
+                    outputRange: [0.6, 0.8]
+                })
+            }
+        ],
+        opacity: pulseAnim.interpolate({
+            inputRange: [0, 0.5],
+            outputRange: [0.8, 1]
+        })
+    };
+
+    return (
+        <Animated.View
+            style={[
+                styles.star,
+                {
+                    top,
+                    left,
+                    transform: [{ scale: scaleAnim }]
+                },
+                pulseStyle
+            ]}
+        >
+            <FontAwesome
+                name="star"
+                size={30}
+                color={emotionColors[emocion]}
+            />
+        </Animated.View>
+    );
+});
+
 export default function Principal() {
-    const [contador, setContador] = useState(3);
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
     const { emociones } = useUserStore();
@@ -33,7 +97,7 @@ export default function Principal() {
 
     return (
         <ImageBackground
-            source={require('../assets/images/background.jpg')}
+            source={require('../assets/images/Background1.jpg')}
             style={styles.background}
         >
             <View style={styles.header}>
@@ -55,20 +119,13 @@ export default function Principal() {
                 )}
             </View>
             {/* Renderizar estrellas */}
-            {/* Renderizar estrellas con posiciones guardadas */}
-            {emociones.slice(0, MAX_STARS).map((emocionData, index) => (
-                <FontAwesome
-                    key={`${index}-${emocionData.emocion}`}
-                    name="star"
-                    size={30}
-                    color={emotionColors[emocionData.emocion] || '#ffffff'}
-                    style={[
-                        styles.star,
-                        {
-                            top: emocionData.top,
-                            left: emocionData.left
-                        }
-                    ]}
+            {emociones.slice(0, 100).map((starData, index) => (
+                <Star
+                    key={`${starData.emocion}-${index}`}
+                    id={starData.id}
+                    emocion={starData.emocion}
+                    top={starData.top}
+                    left={starData.left}
                 />
             ))}
             <Modal
@@ -111,8 +168,6 @@ export default function Principal() {
                 >
                     <Text style={styles.buttonText}>Expresa aquí tus emociones</Text>
                 </TouchableOpacity>
-
-                <Text style={styles.counterText}>Aparecerá una estrella en {contador}</Text>
             </View>
         </ImageBackground>
     );
@@ -136,7 +191,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
+        paddingTop: 250,
     },
     background: {
         flex: 1,
@@ -218,7 +273,7 @@ const styles = StyleSheet.create({
     },
     star: {
         position: 'absolute',
+        shadowOpacity: 0.8,
         elevation: 5,
-        fontSize: 20,
     },
 });

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, ImageBackground, ScrollView, Dimensions  } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import useUserStore from '../store/userStore';
-import { FontAwesome } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get('window');
 // Restricciones de posición
-const TOP_MARGIN = 100;
-const BOTTOM_MARGIN = 150;
+const TOP_MARGIN = 150;
+const BOTTOM_MARGIN = 250;
 const RENDER_HEIGHT = height - TOP_MARGIN - BOTTOM_MARGIN;
 const RENDER_WIDTH = width;
 
@@ -19,35 +18,35 @@ const EmotionModal = () => {
     const { addEmocion } = useUserStore();
 
     const emotionsData = [
-        { 
-            color: 'red', 
-            label: 'Enojo', 
-            description: 'El enojo es una emoción que surge cuando sentimos que algo no es justo o cuando nuestras expectativas no se cumplen.' 
+        {
+            color: 'red',
+            label: 'Enojo',
+            description: 'El enojo es una emoción que surge cuando sentimos que algo no es justo o cuando nuestras expectativas no se cumplen.'
         },
-        { 
-            color: 'rgb(253, 93, 0)', 
-            label: 'Celos', 
-            description: 'Los celos aparecen cuando sentimos que podemos perder algo o a alguien que valoramos, o cuando percibimos una amenaza a una relación importante.' 
+        {
+            color: 'rgb(253, 93, 0)',
+            label: 'Celos',
+            description: 'Los celos aparecen cuando sentimos que podemos perder algo o a alguien que valoramos, o cuando percibimos una amenaza a una relación importante.'
         },
-        { 
-            color: 'yellow', 
-            label: 'Alegría', 
-            description: 'La alegría es una emoción positiva que experimentamos cuando ocurre algo que nos gusta o cuando nos sentimos satisfechos.' 
+        {
+            color: 'yellow',
+            label: 'Alegría',
+            description: 'La alegría es una emoción positiva que experimentamos cuando ocurre algo que nos gusta o cuando nos sentimos satisfechos.'
         },
-        { 
-            color: 'green', 
-            label: 'Desagrado', 
-            description: 'El desagrado es una reacción de rechazo hacia algo que nos parece desagradable, ya sea físico o moral.' 
+        {
+            color: 'green',
+            label: 'Desagrado',
+            description: 'El desagrado es una reacción de rechazo hacia algo que nos parece desagradable, ya sea físico o moral.'
         },
-        { 
-            color: 'skyblue', 
-            label: 'Tristeza', 
-            description: 'La tristeza surge ante la pérdida o el fracaso, y nos ayuda a procesar situaciones dolorosas.' 
+        {
+            color: 'skyblue',
+            label: 'Tristeza',
+            description: 'La tristeza surge ante la pérdida o el fracaso, y nos ayuda a procesar situaciones dolorosas.'
         },
-        { 
-            color: 'purple', 
-            label: 'Nostalgia', 
-            description: 'La nostalgia es una mezcla de tristeza y afecto por recuerdos del pasado, generalmente asociados con momentos felices.' 
+        {
+            color: 'purple',
+            label: 'Nostalgia',
+            description: 'La nostalgia es una mezcla de tristeza y afecto por recuerdos del pasado, generalmente asociados con momentos felices.'
         },
     ];
 
@@ -65,13 +64,7 @@ const EmotionModal = () => {
     });
 
 
-const handleSend = () => {
-        // Verificar que no exceda el límite de 100 estrellas
-        if (selectedEmotions.length === 0) {
-            router.back();
-            return;
-        }
-
+    const handleSend = () => {
         // Generar datos de emociones con posiciones
         const emocionesConPosicion = selectedEmotions.map(emocion => ({
             emocion,
@@ -93,7 +86,7 @@ const handleSend = () => {
                 </View>
             );
         }
-        
+
         return selectedEmotions.map(emotionLabel => {
             const emotion = emotionsData.find(e => e.label === emotionLabel);
             return (
@@ -108,7 +101,7 @@ const handleSend = () => {
 
     return (
         <Modal visible={visible} transparent animationType="slide">
-            <ImageBackground source={require('../assets/images/background.jpg')} style={styles.background}>
+            <ImageBackground source={require('../assets/images/Background1.jpg')} style={styles.background}>
                 <View style={styles.modalContainer}>
                     <View style={[styles.modalContent]}>
                         <ScrollView contentContainerStyle={styles.emotionsRow}>
@@ -136,13 +129,13 @@ const handleSend = () => {
                                 </View>
                             ))}
                         </ScrollView>
-                        
+
                         <ScrollView style={styles.descriptionScrollContainer}>
                             <View style={styles.descriptionContainer}>
                                 {getDescription()}
                             </View>
                         </ScrollView>
-                        
+
                         {!selectedEmotions.length ? (
                             <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
                                 <Text style={styles.closeButtonText}>Cerrar</Text>
@@ -179,7 +172,7 @@ const styles = StyleSheet.create({
         width: '90%',
     },
     emotionsRow: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'center',
         flexWrap: 'wrap',
         gap: 15,
@@ -216,8 +209,8 @@ const styles = StyleSheet.create({
         color: 'rgb(255, 255, 255)',
         fontWeight: 'bold',
     },
-    initialMessage:{
-        color: 'rgb(255, 255, 255)', 
+    initialMessage: {
+        color: 'rgb(255, 255, 255)',
     },
     selectedText: {
         fontSize: 14,

@@ -22,7 +22,7 @@ export default function Index() {
   };
   return (
     <ImageBackground
-      source={require('../assets/images/background.jpg')}
+      source={require('../assets/images/Background1.jpg')}
       style={styles.background}
     >
       <View style={styles.container}>
