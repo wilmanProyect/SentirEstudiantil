@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, ImageBackground, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, ImageBackground, ScrollView, Dimensions  } from 'react-native';
 import { useRouter } from 'expo-router';
 import useUserStore from '../store/userStore';
+import { FontAwesome } from "@expo/vector-icons";
+
+const { width, height } = Dimensions.get('window');
+// Restricciones de posición
+const TOP_MARGIN = 100;
+const BOTTOM_MARGIN = 150;
+const RENDER_HEIGHT = height - TOP_MARGIN - BOTTOM_MARGIN;
+const RENDER_WIDTH = width;
+
 
 const EmotionModal = () => {
     const [visible, setVisible] = useState(true);
@@ -50,15 +59,32 @@ const EmotionModal = () => {
         }
     };
 
-    const handleSend = () => {
-        // Añadir cada emoción seleccionada al estado global
-        selectedEmotions.forEach(emocion => {
-            addEmocion(emocion);
+    const generatePosition = () => ({
+        top: TOP_MARGIN + (Math.random() * RENDER_HEIGHT),
+        left: Math.random() * RENDER_WIDTH
+    });
+
+
+const handleSend = () => {
+        // Verificar que no exceda el límite de 100 estrellas
+        if (selectedEmotions.length === 0) {
+            router.back();
+            return;
+        }
+
+        // Generar datos de emociones con posiciones
+        const emocionesConPosicion = selectedEmotions.map(emocion => ({
+            emocion,
+            ...generatePosition()
+        }));
+
+        // Guardar en el estado global
+        emocionesConPosicion.forEach(emocionData => {
+            addEmocion(emocionData);
         });
-        
+
         router.back();
     };
-
     const getDescription = () => {
         if (selectedEmotions.length === 0) {
             return (

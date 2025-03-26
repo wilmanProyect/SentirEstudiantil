@@ -17,19 +17,11 @@ const emotionColors = {
     'Tristeza': 'skyblue',
     'Nostalgia': 'purple'
 };
-
-
-// Definimos los límites de la zona de renderizado
-const TOP_MARGIN = 100;  // Margen superior (píxeles)
-const BOTTOM_MARGIN = 250; // Margen inferior (píxeles)
-const RENDER_HEIGHT = height - TOP_MARGIN - BOTTOM_MARGIN;
-const RENDER_WIDTH = width;
 const MAX_STARS = 100; // Límite de estrellas
 export default function Principal() {
     const [contador, setContador] = useState(3);
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
-    const [stars, setStars] = useState([]); // Cambiado a array
     const { emociones } = useUserStore();
     const router = useRouter();
     const nombre = useNombre();
@@ -38,26 +30,6 @@ export default function Principal() {
         setSelectedDate(day.dateString);
         setShowCalendar(false); // Cierra el modal después de seleccionar una fecha
     };
-
-    // Generar posiciones dentro del área permitida
-    useEffect(() => {
-        if (emociones.length > 0) {
-            // Crear nuevas estrellas solo para emociones que no tienen una estrella aún
-            const newStars = emociones.slice(0, MAX_STARS).map((emocion, index) => {
-                return {
-                    id: `${index}-${Date.now()}`,
-                    emocion,
-                    color: emotionColors[emocion] || '#ffffff',
-                    top: TOP_MARGIN + (Math.random() * RENDER_HEIGHT),
-                    left: Math.random() * RENDER_WIDTH
-                };
-            });
-            
-            setStars(newStars);
-        } else {
-            setStars([]); // Limpiar si no hay emociones
-        }
-    }, [emociones]);
 
     return (
         <ImageBackground
@@ -83,17 +55,18 @@ export default function Principal() {
                 )}
             </View>
             {/* Renderizar estrellas */}
-            {stars.map((star) => (
+            {/* Renderizar estrellas con posiciones guardadas */}
+            {emociones.slice(0, MAX_STARS).map((emocionData, index) => (
                 <FontAwesome
-                    key={star.id}
+                    key={`${index}-${emocionData.emocion}`}
                     name="star"
                     size={30}
-                    color={star.color}
+                    color={emotionColors[emocionData.emocion] || '#ffffff'}
                     style={[
                         styles.star,
                         {
-                            top: star.top,
-                            left: star.left
+                            top: emocionData.top,
+                            left: emocionData.left
                         }
                     ]}
                 />
@@ -245,13 +218,7 @@ const styles = StyleSheet.create({
     },
     star: {
         position: 'absolute',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 3,
         elevation: 5,
+        fontSize: 20,
     },
 });
