@@ -22,7 +22,7 @@ export default function Index() {
   };
   return (
     <ImageBackground
-      source={require('../assets/images/Background1.jpg')}
+      source={require('../assets/images/Backgound2.jpg')}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -59,6 +59,8 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
+    width: '100%',
+    height: '100%',
   },
 
   button: {

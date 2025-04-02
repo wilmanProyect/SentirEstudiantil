@@ -6,7 +6,7 @@ import useUserStore from '../store/userStore';
 const { width, height } = Dimensions.get('window');
 // Restricciones de posición
 const TOP_MARGIN = 150;
-const BOTTOM_MARGIN = 250;
+const BOTTOM_MARGIN = 350;
 const RENDER_HEIGHT = height - TOP_MARGIN - BOTTOM_MARGIN;
 const RENDER_WIDTH = width;
 
@@ -101,7 +101,7 @@ const EmotionModal = () => {
 
     return (
         <Modal visible={visible} transparent animationType="slide">
-            <ImageBackground source={require('../assets/images/Background1.jpg')} style={styles.background}>
+            <ImageBackground source={require('../assets/images/Backgound2.jpg')} style={styles.background}>
                 <View style={styles.modalContainer}>
                     <View style={[styles.modalContent]}>
                         <ScrollView contentContainerStyle={styles.emotionsRow}>
@@ -157,6 +157,8 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'center',
+        width: '100%',
+        height: '100%',
     },
     modalContainer: {
         flex: 1,

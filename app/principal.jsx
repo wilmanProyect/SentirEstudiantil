@@ -92,12 +92,12 @@ export default function Principal() {
 
     const onDayPress = (day) => {
         setSelectedDate(day.dateString);
-        setShowCalendar(false); // Cierra el modal después de seleccionar una fecha
+        setShowCalendar(false);
     };
 
     return (
         <ImageBackground
-            source={require('../assets/images/Background1.jpg')}
+            source={require('../assets/images/Backgound2.jpg')}
             style={styles.background}
         >
             <View style={styles.header}>
@@ -115,7 +115,7 @@ export default function Principal() {
                 {selectedDate ? (
                     <Text style={styles.selectedDate}>{selectedDate}</Text>
                 ) : (
-                    <Text> __ </Text>
+                    <Text>  </Text>
                 )}
             </View>
             {/* Renderizar estrellas */}
@@ -196,7 +196,9 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         resizeMode: 'cover',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        width: '100%',
+        height: '100%',
     },
     title: {
         color: 'white',
