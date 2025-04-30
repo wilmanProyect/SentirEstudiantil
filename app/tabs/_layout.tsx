@@ -59,7 +59,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="modal" 
+        name="emociones" 
         options={{
           tabBarLabel: 'Manual',
           tabBarIcon: ({ size }) => <ManualTabIcon size={size} />,
