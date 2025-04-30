@@ -17,7 +17,7 @@ export default function Index() {
     setErrors(newErrors);
 
     if (!newErrors.nombre) {
-      router.push('/principal');
+      router.push('/tabs/principal');
     }
   };
   return (

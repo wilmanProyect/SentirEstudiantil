@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
-import useUserStore from '../store/userStore';
+import { useRouter, useFocusEffect } from 'expo-router'; // Importa useFocusEffect
+import useUserStore from '../../store/userStore';  // Sube 2 niveles desde app/modal-emociones
 
 const { width, height } = Dimensions.get('window');
-// Restricciones de posición
 const TOP_MARGIN = 150;
 const BOTTOM_MARGIN = 350;
 const RENDER_HEIGHT = height - TOP_MARGIN - BOTTOM_MARGIN;
 const RENDER_WIDTH = width;
 
-
 const EmotionModal = () => {
-    const [visible, setVisible] = useState(true);
-    const [selectedEmotions, setSelectedEmotions] = useState([]);
-    const router = useRouter();
-    const { addEmocion } = useUserStore();
+  const [selectedEmotions, setSelectedEmotions] = useState([]);
+  const router = useRouter();
+  const addEmocion = useUserStore((state) => state.addEmocion);
+  const [isVisible, setIsVisible] = useState(false);
 
     const emotionsData = [
         {
@@ -63,26 +61,30 @@ const EmotionModal = () => {
         left: Math.random() * RENDER_WIDTH
     });
 
+    const handleClose = () => {
+        setIsVisible(false);
+        router.back();
+    };
 
     const handleSend = () => {
-        // Generar datos de emociones con posiciones
         const emocionesConPosicion = selectedEmotions.map(emocion => ({
             emocion,
+            id: Date.now(),
             ...generatePosition()
         }));
 
-        // Guardar en el estado global
         emocionesConPosicion.forEach(emocionData => {
             addEmocion(emocionData);
         });
 
-        router.back();
+        handleClose();
     };
+
     const getDescription = () => {
         if (selectedEmotions.length === 0) {
             return (
                 <View style={styles.currentDescription}>
-                    <Text style={styles.initialMessage} >Selecciona una emoción para ver su descripción</Text>
+                    <Text style={styles.initialMessage}>Selecciona una emoción para ver su descripción</Text>
                 </View>
             );
         }
@@ -92,7 +94,7 @@ const EmotionModal = () => {
             return (
                 <View key={emotionLabel} style={styles.emotionDescription}>
                     <View style={[styles.descriptionColor, { backgroundColor: emotion.color }]} />
-                    <Text style={styles.descriptionTitle}>{emotion.label}:</Text>
+                    <Text style={styles.descriptionTitle}>{emotion.label}: </Text>
                     <Text style={styles.descriptionText}>{emotion.description}</Text>
                 </View>
             );
@@ -100,8 +102,13 @@ const EmotionModal = () => {
     };
 
     return (
-        <Modal visible={visible} transparent animationType="slide">
-            <ImageBackground source={require('../assets/images/Backgound2.jpg')} style={styles.background}>
+        <Modal 
+            visible={isVisible} 
+            transparent 
+            animationType="slide"
+            onRequestClose={handleClose}
+        >
+            <ImageBackground source={require('../../assets/images/Backgound2.jpg')} style={styles.background}>
                 <View style={styles.modalContainer}>
                     <View style={[styles.modalContent]}>
                         <ScrollView contentContainerStyle={styles.emotionsRow}>
@@ -137,7 +144,7 @@ const EmotionModal = () => {
                         </ScrollView>
 
                         {!selectedEmotions.length ? (
-                            <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+                            <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
                                 <Text style={styles.closeButtonText}>Cerrar</Text>
                             </TouchableOpacity>
                         ) : (
